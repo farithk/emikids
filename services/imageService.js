@@ -11,7 +11,7 @@ const client = new OpenAI({
 async function generateImage(prompt) {
     try {
         // Step 1: Generate image based on prompt
-        const result = await openai.images.generate({
+        const result = await client.images.generate({
             model: "gpt-image-1",
             prompt,
             size: '1024x1024',
@@ -31,7 +31,24 @@ async function generateImage(prompt) {
         throw error;
     }
 }
+async function generateText(params) {
+    try {
 
+        const response = await client.responses.create({
+            model: "gpt-4.1",
+            input: params
+        });
+
+       
+        console.log("Text done");
+        console.log(response);
+
+        return response; // return the path of the edited image
+    } catch (error) {
+        console.error("Error generating text from promt:", error);
+        throw error;
+    }
+}
 async function editImage(imagePath, prompt) {
     try {
         // Step 2: Upload the image to OpenAI and modify it
@@ -65,4 +82,4 @@ async function editImage(imagePath, prompt) {
     }
 }
 
-module.exports = { generateImage, editImage };
+module.exports = { generateImage, editImage, generateText };

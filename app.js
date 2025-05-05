@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const imageRoutes = require("./routes/imageRoutes");
+const storyRoutes = require("./routes/storyRoutes");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(bodyParser.json()); // to parse JSON requests
 
 // Use routes
 app.use("/api/images", imageRoutes);
+app.use("/api", storyRoutes);
 
 // Default route
 app.get("/", (req, res) => {
