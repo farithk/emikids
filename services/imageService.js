@@ -3,12 +3,30 @@ const { OpenAI } = require("openai");
 const { toFile } = require("openai/uploads");
 const openai = require("../config/openai");
 
+const path = require("path");
+const { bucket } = require("../config/firebase"); 
+
 // Initialize OpenAI client
 const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function generateImage(prompt) {
+async function uploadImageToFirebaseStorage(base64Image, filename) {
+    const buffer = Buffer.from(base64Image, "base64");
+    const file = bucket.file(`images/${filename}`);
+  
+    await file.save(buffer, {
+      metadata: { contentType: "image/png" },
+      public: true, // Hazla pública si quieres acceso por URL pública
+    });
+  
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/images/${filename}`;
+    console.log(publicUrl);
+    
+    return publicUrl;
+  }
+
+async function generateImage(prompt, userId, storyId, stage) {
     try {
         // Step 1: Generate image based on prompt
         const result = await client.images.generate({
@@ -19,13 +37,20 @@ async function generateImage(prompt) {
         });
 
         const image_base64 = result.data[0].b64_json;
-        const image_bytes = Buffer.from(image_base64, "base64");
-        const imagePath = "./otter.png";
 
-        fs.writeFileSync(imagePath, image_bytes);
-        console.log("Image saved as otter.png");
+        // const image_bytes = Buffer.from(image_base64, "base64");
+        // const imagePath = "./otter.png";
 
-        return imagePath; // return the path of the saved image
+        // fs.writeFileSync(imagePath, image_bytes);
+        // console.log("Image saved as otter.png");
+
+        // const imagePath = "./otter.png"; // Ruta al archivo
+        // const imageBuffer = fs.readFileSync(imagePath);
+        // const base64Image = imageBuffer.toString("base64");
+
+        const response = await uploadImageToFirebaseStorage(image_base64, userId + storyId + stage);
+
+        return response; // return the path of the saved image
     } catch (error) {
         console.error("Error generating image:", error);
         throw error;
@@ -82,4 +107,4 @@ async function editImage(imagePath, prompt) {
     }
 }
 
-module.exports = { generateImage, editImage, generateText };
+module.exports = { generateImage, editImage, generateText, uploadImageToFirebaseStorage };

@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   createUser,
   createStory,
-  addStage,
+  addStages,
   getStory,
   getAllStoriesByUser
 } = require("../services/storyService");
@@ -39,13 +39,13 @@ router.post("/stories", async (req, res) => {
 });
 
 // Agrega un párrafo
-router.post("/stage", async (req, res) => {
+router.post("/stages", async (req, res) => {
   try {
-    const { userId, storyId, text, stageData } = req.body;
-    if (!userId || !storyId || !text || !stageData) return res.status(400).send("userId, storyId, stageData and text are required");
+    const { userId, storyId, inicio, nudo, desenlace } = req.body;
+    if (!userId || !storyId) return res.status(400).send("userId, storyId are required");
 
-    await addStage(userId, storyId, text, stageData);
-    res.send("Párrafo agregado");
+    await addStages(userId, storyId, inicio, nudo, desenlace);
+    res.send({ message: 'Cuento guardado' });
   } catch (err) {
     res.status(500).send(err.message);
   }

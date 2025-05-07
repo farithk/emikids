@@ -12,3 +12,5 @@ node_modules/
 
 # Generated images
 *.png
+
+serviceAccountKey.json
