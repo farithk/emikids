@@ -1,0 +1,3 @@
+runtime: nodejs20
+instance_class: F4
+env: standard

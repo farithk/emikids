@@ -19,10 +19,7 @@ async function uploadImageToFirebaseStorage(base64Image, filename) {
       metadata: { contentType: "image/png" },
       public: true, // Hazla pública si quieres acceso por URL pública
     });
-  
     const publicUrl = `https://storage.googleapis.com/${bucket.name}/images/${filename}`;
-    console.log(publicUrl);
-    
     return publicUrl;
   }
 
@@ -37,16 +34,6 @@ async function generateImage(prompt, userId, storyId, stage) {
         });
 
         const image_base64 = result.data[0].b64_json;
-
-        // const image_bytes = Buffer.from(image_base64, "base64");
-        // const imagePath = "./otter.png";
-
-        // fs.writeFileSync(imagePath, image_bytes);
-        // console.log("Image saved as otter.png");
-
-        // const imagePath = "./otter.png"; // Ruta al archivo
-        // const imageBuffer = fs.readFileSync(imagePath);
-        // const base64Image = imageBuffer.toString("base64");
 
         const response = await uploadImageToFirebaseStorage(image_base64, userId + storyId + stage);
 
@@ -64,19 +51,14 @@ async function generateText(params) {
             input: params
         });
 
-       
-        console.log("Text done");
-        console.log(response);
-
         return response; // return the path of the edited image
     } catch (error) {
         console.error("Error generating text from promt:", error);
         throw error;
     }
 }
-async function editImage(imagePath, prompt) {
+async function editImage(imagePath, prompt, userId, storyId, stage ) {
     try {
-        // Step 2: Upload the image to OpenAI and modify it
         const images = await Promise.all(
             [imagePath].map(async (file) =>
                 await toFile(fs.createReadStream(file), null, {
@@ -97,10 +79,9 @@ async function editImage(imagePath, prompt) {
         const image_bytes = Buffer.from(image_base64, "base64");
         const editedImagePath = "./basket.png";
 
-        fs.writeFileSync(editedImagePath, image_bytes);
-        console.log("Edited image saved as basket.png");
+        const response = await uploadImageToFirebaseStorage(image_base64, userId + storyId + stage);
 
-        return editedImagePath; // return the path of the edited image
+        return response; // return the path of the edited image
     } catch (error) {
         console.error("Error editing image:", error);
         throw error;
