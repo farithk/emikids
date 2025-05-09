@@ -11,7 +11,6 @@ async function createUser(userId) {
 
   if (userSnap.exists) { // 'exists' es una propiedad en Admin SDK DocumentSnapshot
     // If user exists, return early
-    console.log(`User ${userId} already exists.`); // Agregué un log
     return {
         status: 'User Exists',
         response: false
@@ -21,7 +20,6 @@ async function createUser(userId) {
   // Admin SDK: Llama a set() en la referencia del documento
   // admin.firestore.FieldValue.serverTimestamp() es preferible a new Date() en backend
   await userRef.set({ createdAt: new Date() });
-  console.log(`User ${userId} created.`); // Agregué un log
   return {
     status: 'User Created',
     response: true
@@ -39,7 +37,6 @@ async function createStory(userId, title) {
     createdAt: new Date(),
   });
 
-  console.log(`Story created for user ${userId} with ID: ${storyDoc.id}`); // Agregué un log
   return storyDoc.id;
 }
 
@@ -54,7 +51,6 @@ async function addStages(userId, storyId, inicio, nudo, desenlace) {
     "stages.nudo": nudo,
     "stages.desenlace": desenlace
   });
-   console.log(`Stages added/updated for story ${storyId} by user ${userId}.`); // Agregué un log
 }
 
 
@@ -70,9 +66,6 @@ async function getStory(userId, storyId) {
     console.error(`Story not found: userId=${userId}, storyId=${storyId}`); // Agregué log de error
     throw new Error("Story not found");
   }
-
-  // Admin SDK: Llama a data() para obtener los datos del documento
-  console.log(`Story data fetched for story ${storyId} by user ${userId}.`); // Agregué log
   return snap.data();
 }
 
@@ -86,18 +79,15 @@ async function getAllStoriesByUser(userId) {
 
   // Admin SDK: Los documentos están en la propiedad 'docs' de QuerySnapshot
   if (querySnapshot.empty) {
-      console.log(`No stories found for user ${userId}.`); // Agregué log
       return [];
   }
 
   const stories = [];
   // Admin SDK: Puedes iterar sobre snapshot.docs o usar snapshot.forEach
   querySnapshot.forEach((doc) => {
-    console.log(`Fetched story: ${doc.id}`); // Agregué log
     stories.push({ id: doc.id, ...doc.data() }); // doc.id y doc.data() son los métodos/propiedades correctos
   });
 
-  console.log(`Fetched ${stories.length} stories for user ${userId}.`); // Agregué log
   return stories;
 }
 
