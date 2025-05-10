@@ -58,31 +58,31 @@ async function generateTextController(req, res) {
 
         Si la respuesta no cumple con la pregunta suministrada, nunca incluir la respuesta ni la pregunta dentro del tag correspondiente a la etapa que se recibe. Y debes usar la misma pregunta y enviarla de nuevo dentro del tag <q>. Es importante no incluir esto dentro del tag del estado actual si la respuesta no cumple.
 
-        Tú organizarás el texto recibido de las respuesta <r> e incluirás esa respuesta dentro del tag correspondiente a la etapa que se recibe, debes corregir coherencia y una buena estructura sin agregar nuevas ideas que no hayan sido suministradas dentro de la respuesta <r>.
-
         Tu tarea es:
         1. Trabaja solo sobre la etapa actual (inicio, nudo o desenlace).
         2. Siempre conserva y reutiliza el contenido exacto que hayas recibido en las otras etapas no activas. No reemplaces ni modifiques su contenido. Solo puedes modificar la etapa activa. Ejemplo: si estamos trabajando en <nudo>, el contenido original de <inicio> debe mantenerse exactamente igual y no modificarse ni eliminarse.
        
-        3. Corrige solo los errores ortográficos del texto recibido en la respuesta dentro de <r> para la etapa indicada (<inicio>, <nudo> o <desenlace>).
+        3. Tú organizarás el texto recibido de las respuesta <r> e incluirás esa respuesta dentro del tag correspondiente a la etapa que se recibe, debes corregir coherencia y una buena estructura sin agregar nuevas ideas que no hayan sido suministradas dentro de la respuesta <r>.
+            Corrige solo los errores ortográficos de cada una de las palabras de texto recibido en la respuesta dentro de <r> para la etapa indicada (<inicio>, <nudo> o <desenlace>).
 
             Devuelve la corrección usando la siguiente estructura exacta:
-
+            Abre el tag del estado correspondiente
             Abre la corrección con <text>.
-
-            Cada palabra incorrecta (por ejemplo, sin tilde, mal escrita, con letras de más o de menos, etc.) debe ser reemplazada por un bloque <fix>palabra_incorrecta,corrección<fix>.
+            Debes agregar el contenido anterior del estado en el que estamos trabajando.
+            Solo las palabras que estén mal escritas deben corregirse con un bloque <fix>palabra_incorrecta,corrección<fix>. No incluyas palabras que ya estén correctas. Si una palabra no tiene errores ortográficos, no la marques con <fix> ni la modifiques.
 
             Es obligatorio que TODA palabra incorrecta, incluso aquellas que solo requieren tilde, esté dentro del bloque <fix>.
 
             El bloque <fix> debe reemplazar exactamente la palabra incorrecta en su lugar original dentro del texto corregido.
 
             Luego cierra la corrección con <text> (sin símbolo de cierre / dentro de los tags, es decir: usa <text> al principio y <text> al final).
+            Cierra el tag del estado correspondiente
 
             No agregues explicaciones, ni incluyas sugerencias, ni texto adicional fuera de esta estructura (solo puedes coregir la coherencia si notas que no tiene sentido con lo que se ha escrito anteriormente en la etapa que se esta evaluando). Solo devuelve el texto corregido con los <fix>, dentro del tag de la etapa actual.
                 
             Ejemplo: 
-            Respuesta que recibes: habia una ves una niña Yamada Lupita
-            Corrección: <text><fix>habia,Había<fix> una <fix>ves,vez<fix> una niña <fix>Yamada,llamada<fix><text>
+            Respuesta que recibes: Etapa inicio. habia una ves una niña Yamada Lupita
+            Corrección: <inicio><text><fix>habia,Había<fix> una <fix>ves,vez<fix> una niña <fix>Yamada,llamada<fix><text><inicio>
 
         4. Si el texto de la etapa actual tiene menos de 400 caracteres, haz una sola pregunta puntual (entre los tags <q>) que lo ayude a continuar esa etapa. La pregunta debe tener solo dos ejemplos concretos.
         5. Si el texto de la etapa actual tiene 400 caracteres o más, haz una sola pregunta final (entre los tags <q>) que lo ayude a cerrar esa etapa de forma creativa pero breve.
