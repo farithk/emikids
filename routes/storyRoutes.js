@@ -41,10 +41,10 @@ router.post("/stories", async (req, res) => {
 // Agrega un párrafo
 router.post("/stages", async (req, res) => {
   try {
-    const { userId, storyId, inicio, nudo, desenlace } = req.body;
+    const { userId, storyId, inicio, nudo, desenlace, title } = req.body;
     if (!userId || !storyId) return res.status(400).send("userId, storyId are required");
 
-    await addStages(userId, storyId, inicio, nudo, desenlace);
+    await addStages(userId, storyId, inicio, nudo, desenlace, title);
     res.send({ message: 'Cuento guardado' });
   } catch (err) {
     res.status(500).send(err.message);

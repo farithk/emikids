@@ -40,7 +40,7 @@ async function createStory(userId, title) {
   return storyDoc.id;
 }
 
-async function addStages(userId, storyId, inicio, nudo, desenlace) {
+async function addStages(userId, storyId, inicio, nudo, desenlace, titulo) {
   // Admin SDK: Navega hasta la referencia del documento de la historia
   const storyRef = db.collection("users").doc(userId).collection("stories").doc(storyId);
 
@@ -49,7 +49,8 @@ async function addStages(userId, storyId, inicio, nudo, desenlace) {
     // La sintaxis para campos anidados 'stages.inicio' es correcta
     "stages.inicio": inicio,
     "stages.nudo": nudo,
-    "stages.desenlace": desenlace
+    "stages.desenlace": desenlace,
+    "title": titulo
   });
 }
 

@@ -16,7 +16,7 @@ app.use("/api", storyRoutes);
 
 // Default route
 app.get("/", (req, res) => {
-    res.send("Welcome to the Image Generation API");
+    res.send("Welcome to the Image Generation API, this is a beta test!");
 });
 
 const PORT = process.env.PORT || 5050;
